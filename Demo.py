@@ -10,6 +10,28 @@
 import wx
 import wx.xrc
 
+class MyFileDropTarget(wx.FileDropTarget):
+    """"""
+
+    #----------------------------------------------------------------------
+    def __init__(self, window):
+        """Constructor"""
+        wx.FileDropTarget.__init__(self)
+        self.window = window
+
+    #----------------------------------------------------------------------
+    def OnDropFiles(self, x, y, filenames):
+        """
+        When files are dropped, write where they were dropped and then
+        the file paths themselves
+        """
+        self.window.SetInsertionPointEnd()
+        self.window.updateText("\n%d file(s) dropped at %d,%d:\n" %
+                              (len(filenames), x, y))
+        print(filenames)
+        for filepath in filenames:
+            self.window.updateText(filepath + '\n')
+
 ###########################################################################
 ## Class MyFrame1
 ###########################################################################
@@ -34,8 +56,11 @@ class MyFrame1 ( wx.Frame ):
 		self.m_button1 = wx.Button( self, wx.ID_ANY, u"Find the square", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer1.Add( self.m_button1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
-		self.m_textCtrl2 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer1.Add( self.m_textCtrl2, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
+		self.m_textCtrl2 = wx.TextCtrl(self, wx.ID_ANY, wx.EmptyString,
+									   wx.Point(5, 1), wx.DefaultSize,
+									   wx.TE_CENTER)
+		bSizer1.Add(self.m_textCtrl2, 0,
+					wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND, 5)
 
 
 		self.SetSizer( bSizer1 )
